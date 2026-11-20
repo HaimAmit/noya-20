@@ -37,3 +37,11 @@ const enc = async data => { const iv = crypto.getRandomValues(new Uint8Array(12)
 fs.writeFileSync('check.bin', Buffer.concat([salt, await enc(new TextEncoder().encode('noya20'))]));
 fs.writeFileSync('vault.bin', await enc(plain));
 console.log(`vault.bin: ${used.length} photos, ${(fs.statSync('vault.bin').size / 1e6).toFixed(1)} MB`);
+
+const v = Date.now().toString(36);
+let html = fs.readFileSync('index.html', 'utf8');
+html = html.replace(/(href="style\.css)(\?v=\w+)?"/, `$1?v=${v}"`)
+  .replace(/(src="app\.js)(\?v=\w+)?"/, `$1?v=${v}"`)
+  .replace(/<script src="gate\.js[^"]*"[^>]*><\/script>/, `<script src="gate.js?v=${v}" data-v="${v}"></script>`);
+fs.writeFileSync('index.html', html);
+console.log('version', v);

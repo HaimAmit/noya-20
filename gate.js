@@ -1,21 +1,22 @@
 (() => {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   scrollTo(0, 0);
+  const V = document.currentScript?.dataset.v || Date.now();
   const $ = s => document.querySelector(s);
   const form = $('#gate'), input = $('#pw'), msg = $('#gate-msg'), btn = $('#gate-btn');
   const KEY = 'noya20-pass';
 
   const normalize = raw => {
-    let s = raw.trim().toLowerCase().replace(/[\s"'״׳.!?,🐶🐾]/g, '').replace(/ו+$/, 'ו');
+    let s = raw.normalize('NFC').replace(/[\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g, '').trim().toLowerCase().replace(/[\s"'״׳.!?,🐶🐾]/g, '').replace(/ו+$/, 'ו');
     if (['מילו', 'מיילו', 'מיילוש', 'milo', 'mylo', 'mailo'].includes(s)) s = 'מיילו';
     return s;
   };
 
-  const checkP = fetch('check.bin').then(r => r.arrayBuffer()).then(b => new Uint8Array(b));
+  const checkP = fetch(`check.bin?v=${V}`).then(r => r.arrayBuffer()).then(b => new Uint8Array(b));
 
   let progress = 0, onProgress = () => {};
   const vaultP = (async () => {
-    const r = await fetch('vault.bin');
+    const r = await fetch(`vault.bin?v=${V}`);
     const total = +r.headers.get('content-length') || 0;
     if (!r.body || !total) return new Uint8Array(await r.arrayBuffer());
     const reader = r.body.getReader(), out = new Uint8Array(total);
