@@ -112,13 +112,7 @@ window.startApp = ({ STOPS, MILESTONES, LETTER, JUMP_DATE, PHOTOS }) => {
 
   const body = document.body, fade = $('#fade');
 
-  const soundBtn = $('#sound');
-  soundBtn.textContent = Sound.muted ? '🔇' : '🔊';
-  soundBtn.addEventListener('click', () => { soundBtn.textContent = Sound.toggle() ? '🔇' : '🔊'; });
-  const soundState = () => ({ alt: Math.max(0, altitudeNow()), chute: body.classList.contains('chute'), landed: body.classList.contains('landed') });
-
   $('#jump').addEventListener('click', () => {
-    try { Sound.start(soundState); } catch {}
     body.classList.remove('preflight');
     body.classList.add('flying');
     requestAnimationFrame(() => {
@@ -128,7 +122,6 @@ window.startApp = ({ STOPS, MILESTONES, LETTER, JUMP_DATE, PHOTOS }) => {
   });
 
   $('#again').addEventListener('click', () => {
-    Sound.stop();
     fade.classList.add('on');
     setTimeout(() => {
       body.classList.add('preflight');
