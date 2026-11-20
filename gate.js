@@ -9,8 +9,9 @@
     return s;
   };
 
-  let vault;
-  const getVault = async () => vault ||= new Uint8Array(await (await fetch('vault.bin', { cache: 'no-cache' })).arrayBuffer());
+  let vaultP;
+  const getVault = () => vaultP ||= fetch('vault.bin').then(r => r.arrayBuffer()).then(b => new Uint8Array(b)).catch(e => { vaultP = null; throw e; });
+  getVault().catch(() => {});
 
   async function unlock(pass) {
     const buf = await getVault();
