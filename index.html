@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>נויה בת 20 🪂</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0f2f66">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪂</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="locked">
+
+<div id="sky"></div>
+<div id="clouds" aria-hidden="true"></div>
+
+<div id="hud" aria-hidden="true">
+  <div id="altimeter"><span id="alt-num">2,000</span><small>מ׳</small></div>
+  <div id="alt-bar"><div id="alt-fill"></div></div>
+</div>
+
+<div id="diver" aria-hidden="true">
+  <svg id="canopy" viewBox="0 0 120 80">
+    <defs>
+      <linearGradient id="cg" x1="0" x2="1">
+        <stop offset="0" stop-color="#ff4fa3"/><stop offset=".33" stop-color="#ffb13b"/>
+        <stop offset=".66" stop-color="#36d1c4"/><stop offset="1" stop-color="#7b6cff"/>
+      </linearGradient>
+    </defs>
+    <path d="M6 34 Q60 -6 114 34 Q100 28 87 34 Q74 26 60 34 Q46 26 33 34 Q20 28 6 34Z" fill="url(#cg)" stroke="#fff" stroke-width="1.5"/>
+    <g stroke="#fff" stroke-width="1" opacity=".85">
+      <line x1="8" y1="34" x2="57" y2="78"/><line x1="33" y1="34" x2="58" y2="78"/>
+      <line x1="87" y1="34" x2="62" y2="78"/><line x1="112" y1="34" x2="63" y2="78"/>
+    </g>
+  </svg>
+  <svg id="person" viewBox="0 0 80 80">
+    <g stroke="#1b1b3a" stroke-width="5" stroke-linecap="round" fill="none">
+      <path d="M40 34 L18 18"/><path d="M40 34 L62 18"/>
+      <path d="M40 48 L24 68"/><path d="M40 48 L56 68"/>
+    </g>
+    <rect x="31" y="28" width="18" height="24" rx="8" fill="#ff4fa3"/>
+    <circle cx="40" cy="20" r="9" fill="#ffd1a8"/>
+    <path d="M31 19 Q40 6 49 19" fill="#ffb13b"/>
+    <rect x="33" y="17" width="14" height="5" rx="2.5" fill="#2b2b55" opacity=".85"/>
+  </svg>
+</div>
+
+<main id="flight">
+
+  <section id="intro" class="screen" data-alt="2000">
+    <div class="plane-door">
+      <div class="door-label">דלת יציאה · 2,000 מ׳</div>
+      <h1><span class="name">נויה</span><span class="twenty">20</span></h1>
+      <p class="lead">מאז שנולדת אנחנו מחכים לרגע הזה.<br>טוב, אולי לא לקפיצה. אבל ל־20 — בטוח.</p>
+      <form id="gate" autocomplete="off">
+        <div class="gate-q">🎫 בדיקת כרטיסים לפני העלייה למטוס<br><b>מי הכלב הכי מסוכן בעולם?</b></div>
+        <input id="pw" type="text" inputmode="text" placeholder="התשובה שלך..." aria-label="סיסמה">
+        <button type="submit" id="gate-btn">בדיקה ✈️</button>
+        <div id="gate-msg" aria-live="polite"></div>
+      </form>
+      <button id="jump" type="button" hidden>מוכנה? קופצת! 🪂</button>
+      <p class="hint">גללי למטה ותיהני מהנפילה</p>
+    </div>
+  </section>
+
+  <div id="stops"></div>
+
+  <section id="landing" class="screen" data-alt="0">
+    <div class="ground">
+      <div class="hills"></div>
+      <div class="blanket"><span>🧺</span><span>🥗</span><span>🍓</span></div>
+    </div>
+    <div class="letter card">
+      <div class="badge">0 מ׳ · נחיתה מושלמת</div>
+      <h2>נחתת! ברוכה הבאה ל־20 💛</h2>
+      <div id="letter-body"></div>
+      <p class="sign">אוהבים אותך עד השמיים ובחזרה,<br><strong>עמית ומאור</strong></p>
+    </div>
+  </section>
+
+  <section id="after" class="screen">
+    <div class="ticket">
+      <div class="ticket-main">
+        <div class="ticket-head">✈️ כרטיס עלייה למטוס</div>
+        <div class="grid">
+          <div><label>נוסעת</label><b>נויה</b></div>
+          <div><label>יעד</label><b>השמיים</b></div>
+          <div><label>תאריך</label><b>28.11 · 11:30</b></div>
+          <div><label>גובה קפיצה</label><b>2,000 מ׳</b></div>
+          <div><label>שער</label><b>אומץ</b></div>
+          <div><label>מושב</label><b>ליד הדלת</b></div>
+        </div>
+        <div class="countdown"><span id="cd-num">7</span> <span id="cd-label">ימים לקפיצה האמיתית</span></div>
+      </div>
+      <div class="ticket-stub">
+        <div class="stub-from">בחסות</div>
+        <div class="stub-name">עמית<br>ומאור</div>
+        <div class="barcode"></div>
+      </div>
+    </div>
+
+    <div class="neon-card">
+      <div class="neon-title">אבל קודם — היום</div>
+      <div class="neon-row"><span class="neon pink">🧺 פיקניק</span><span class="neon blue">✨ 14:30</span></div>
+    </div>
+
+    <button id="again" type="button">לקפוץ שוב ↺</button>
+  </section>
+</main>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script src="app.js"></script>
+<script src="gate.js"></script>
+</body>
+</html>
