@@ -12,20 +12,28 @@ const ctx = { window: {} };
 vm.runInNewContext(fs.readFileSync('content.js', 'utf8'), ctx);
 const { STOPS, MILESTONES, LETTER, JUMP_DATE } = ctx.window;
 
-const used = new Set(STOPS.flatMap(s => s.photos || []));
+const used = [...new Set(STOPS.flatMap(s => s.photos || []))];
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'noya20-'));
-const photos = {};
+const index = {}, blobs = [];
+let offset = 0;
 for (const name of used) {
   const out = path.join(tmp, name);
-  execFileSync('sips', ['-s', 'format', 'jpeg', '-s', 'formatOptions', '72', '-Z', '1100', path.join('photos', name), '--out', out], { stdio: 'ignore' });
-  photos[name] = fs.readFileSync(out).toString('base64');
+  execFileSync('sips', ['-s', 'format', 'jpeg', '-s', 'formatOptions', '66', '-Z', '1000', path.join('photos', name), '--out', out], { stdio: 'ignore' });
+  const b = fs.readFileSync(out);
+  index[name] = [offset, b.length];
+  offset += b.length;
+  blobs.push(b);
 }
 
-const plain = new TextEncoder().encode(JSON.stringify({ content: { STOPS, MILESTONES, LETTER, JUMP_DATE }, photos }));
+const json = Buffer.from(JSON.stringify({ content: { STOPS, MILESTONES, LETTER, JUMP_DATE }, index }));
+const head = Buffer.alloc(4); head.writeUInt32BE(json.length);
+const plain = Buffer.concat([head, json, ...blobs]);
+
 const salt = crypto.getRandomValues(new Uint8Array(16));
-const iv = crypto.getRandomValues(new Uint8Array(12));
 const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
 const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 250000, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
-const enc = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, plain));
-fs.writeFileSync('vault.bin', Buffer.concat([salt, iv, enc]));
-console.log(`vault.bin: ${used.size} photos, ${(fs.statSync('vault.bin').size / 1e6).toFixed(1)} MB`);
+const enc = async data => { const iv = crypto.getRandomValues(new Uint8Array(12)); return Buffer.concat([iv, new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, data))]); };
+
+fs.writeFileSync('check.bin', Buffer.concat([salt, await enc(new TextEncoder().encode('noya20'))]));
+fs.writeFileSync('vault.bin', await enc(plain));
+console.log(`vault.bin: ${used.length} photos, ${(fs.statSync('vault.bin').size / 1e6).toFixed(1)} MB`);
