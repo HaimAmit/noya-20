@@ -1,7 +1,9 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:auto}
 body{font-family:"Rubik",system-ui,sans-serif;color:#13203d;background:#0f2f66;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-body.locked{overflow:hidden;height:100svh}
+body.preflight #stops,body.preflight #landing,body.preflight #after{display:none}
+#fade{position:fixed;inset:0;z-index:50;background:#0f2f66;opacity:0;pointer-events:none;transition:opacity .45s}
+#fade.on{opacity:1;pointer-events:auto}
 img{display:block;max-width:100%}
 
 #sky{position:fixed;inset:0;z-index:-3;background:#0f2f66;transition:background .2s linear}
@@ -40,7 +42,6 @@ h1 .twenty{font-size:clamp(110px,40vw,230px);font-weight:900;background:linear-g
 #jump:active,#again:active{transform:scale(.96)}
 @keyframes pulse{0%,100%{box-shadow:0 10px 30px rgba(255,79,163,.45)}50%{box-shadow:0 10px 46px rgba(255,79,163,.85)}}
 .hint{margin-top:14px;font-size:13px;opacity:.65}
-body:not(.locked) .hint{opacity:0}
 
 .stop{min-height:88svh;display:flex;align-items:center;justify-content:center;padding:40px 16px 40px 16px}
 .card{position:relative;width:min(430px,86vw);background:#fffdf8;border-radius:20px;padding:14px 14px 18px;box-shadow:0 18px 50px rgba(10,25,60,.28);opacity:0;transform:translateY(60px) rotate(var(--r,0deg)) scale(.96);transition:opacity .7s ease,transform .8s cubic-bezier(.2,.9,.3,1.2)}

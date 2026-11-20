@@ -85,14 +85,15 @@ window.startApp = ({ STOPS, MILESTONES, LETTER, JUMP_DATE, PHOTOS }) => {
   let ticking = false;
   function frame() {
     ticking = false;
-    const alt = Math.max(0, altitudeNow());
+    const pre = document.body.classList.contains('preflight');
+    const alt = pre ? TOP : Math.max(0, altitudeNow());
     const p = 1 - alt / TOP;
     altNum.textContent = fmt(alt);
     altFill.style.transform = `scaleY(${alt / TOP})`;
     const c = skyColor(p);
     sky.style.background = `linear-gradient(rgb(${c.map(v => v * .9 | 0)}), rgb(${c}))`;
     document.body.classList.toggle('chute', alt <= chuteAlt);
-    document.body.classList.toggle('landed', alt <= 0 && scrollY + innerHeight > $('#landing .letter').offsetTop + $('#landing').offsetTop + 200);
+    document.body.classList.toggle('landed', !pre && alt <= 0 && scrollY + innerHeight > $('#landing .letter').offsetTop + $('#landing').offsetTop + 200);
     const H = innerHeight + 300;
     const fade = alt < 120 ? alt / 120 : 1;
     clouds.forEach(cl => {
@@ -109,21 +110,28 @@ window.startApp = ({ STOPS, MILESTONES, LETTER, JUMP_DATE, PHOTOS }) => {
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: .25 });
   document.querySelectorAll('.card, .milestone .inner').forEach(el => io.observe(el));
 
+  const body = document.body, fade = $('#fade');
+
   $('#jump').addEventListener('click', () => {
-    document.body.classList.remove('locked');
-    document.body.classList.add('flying');
-    const first = $('.stop, .milestone');
-    scrollTo({ top: first.offsetTop - innerHeight * .08, behavior: 'smooth' });
+    body.classList.remove('preflight');
+    body.classList.add('flying');
+    requestAnimationFrame(() => {
+      const first = $('.stop, .milestone');
+      scrollTo({ top: first.offsetTop - innerHeight * .08, behavior: 'smooth' });
+    });
   });
 
   $('#again').addEventListener('click', () => {
-    scrollTo({ top: 0, behavior: 'smooth' });
+    fade.classList.add('on');
     setTimeout(() => {
-      document.body.classList.add('locked');
-      document.body.classList.remove('flying', 'chute');
+      body.classList.add('preflight');
+      body.classList.remove('flying', 'chute', 'landed');
       document.querySelectorAll('.in').forEach(el => el.classList.remove('in'));
       landed = false;
-    }, 900);
+      scrollTo({ top: 0, behavior: 'instant' });
+      frame();
+      fade.classList.remove('on');
+    }, 450);
   });
 
   const jumpDay = new Date(JUMP_DATE + 'T00:00:00');

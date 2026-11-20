@@ -1,4 +1,6 @@
 (() => {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  scrollTo(0, 0);
   const $ = s => document.querySelector(s);
   const form = $('#gate'), input = $('#pw'), msg = $('#gate-msg'), btn = $('#gate-btn');
   const KEY = 'noya20-pass';
@@ -35,10 +37,12 @@
     try {
       const data = await unlock(pass);
       localStorage.setItem(KEY, pass);
+      input.blur();
       form.hidden = true;
       msg.textContent = '';
       window.startApp(data);
       $('#jump').hidden = false;
+      scrollTo(0, 0);
       return true;
     } catch {
       if (!silent) {
